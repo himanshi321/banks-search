@@ -1,0 +1,61 @@
+<div class="clr-col-sm-12">
+    <h3 style="color:#00bcd4;text-align: center">Search for banks across different cities</h3>
+    <br>
+    <div style="height:1px;width:100%;background:#d1d1d1"></div>
+<br>
+</div>
+<div style="margin-left: auto;margin-right: auto">
+  <div class="clr-col-lg-12">
+        <clr-select-container>
+          <label>Select city</label>
+          <select clrSelect name="options" [(ngModel)]="city" (ngModelChange)="checkForBankList()">
+            <option value="MUMBAI">Mumbai</option>
+            <option value="BANGALORE">Bangalore</option>
+            <option value="HYDERABAD">Hyderabad</option>
+            <option value="BILASPUR">Bilaspur</option>
+            <option value="PUNE">Pune</option>
+          </select>
+        </clr-select-container>
+    <form clrForm style="text-align: right;">
+      <clr-input-container>
+        <input autocomplete="off" clrInput placeholder="search " name="name" [(ngModel)]="searchParam"
+          (ngModelChange)="search()" />
+      </clr-input-container>
+    </form>
+    <clr-datagrid>
+      <clr-dg-footer>
+        <clr-dg-pagination #pagination [clrDgPageSize]="10">
+          <clr-dg-page-size [clrPageSizeOptions]="[10,20,50,100,500,1000]">Banks per page</clr-dg-page-size>
+          {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+          of {{pagination.totalItems}} banks
+        </clr-dg-pagination>
+      </clr-dg-footer>
+      <div class="table-heading">
+        <clr-dg-column class="clr-col-sm-1"></clr-dg-column>
+        <clr-dg-column class="clr-col-sm-1">#</clr-dg-column>
+        <clr-dg-column>Bank Name</clr-dg-column>
+        <clr-dg-column>Branch</clr-dg-column>
+        <clr-dg-column>City</clr-dg-column>
+        <clr-dg-column>State</clr-dg-column>
+        <clr-dg-column>IFSC</clr-dg-column>
+      </div>
+      <clr-dg-row class="table-row" *clrDgItems="let b of searchList;let i= index" (click)="navigateToDetailPage(b)">
+        <clr-dg-cell class="clr-col-sm-1">
+          <clr-icon *ngIf="!b.favorite" (click)="b.favorite=!b.favorite;maintainFavorites(b,$event)" shape="heart">
+          </clr-icon>
+          <clr-icon style="color:#f04646" *ngIf="b.favorite" class="is-solid"
+            (click)="b.favorite=!b.favorite;maintainFavorites(b,$event)" shape="heart"></clr-icon>
+        </clr-dg-cell>
+        <clr-dg-cell class="clr-col-sm-1">{{pagination.firstItem + i + 1}}</clr-dg-cell>
+        <clr-dg-cell>{{b.bank_name}}</clr-dg-cell>
+        <clr-dg-cell>{{b.branch}}</clr-dg-cell>
+        <clr-dg-cell>{{b.city}}</clr-dg-cell>
+        <clr-dg-cell>{{b.state}}</clr-dg-cell>
+        <clr-dg-cell>{{b.ifsc}}</clr-dg-cell>
+      </clr-dg-row>
+    </clr-datagrid>
+  </div>
+</div>
+<router-outlet style="z-index:-1">
+    <ngx-loading [show]=loadingFlag [config]="{ backdropBorderRadius: '14px' }"></ngx-loading>
+</router-outlet>
